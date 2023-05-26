@@ -50,7 +50,8 @@ public class FlappyBirds extends GameScreen {
 		NORMAL, HARD, SUPER
 	}
 
-	private int background = 0;
+	private int backgroundType = 0;
+	private int themeType = 1;
 
 	private Mode currentMode = Mode.NORMAL;
 
@@ -74,7 +75,7 @@ public class FlappyBirds extends GameScreen {
 
 		bird.setPos(350, 250);
 		bird.setVt(0);
-		bird.setLive(true);
+		bird.setLive(true, themeType);
 	}
 
 	public FlappyBirds() {
@@ -164,7 +165,7 @@ public class FlappyBirds extends GameScreen {
 				if (bird.getRect().intersects(chimneyGroup.getChimney(i).getRect())) {
 					if (bird.getLive())
 						bird.fallSound.play();
-					bird.setLive(false);
+					bird.setLive(false, themeType);
 					CurrentScreen = GAMEOVER_SCREEN;
 					break; // Exit the loop since the bird has collided with a chimney
 				}
@@ -196,7 +197,9 @@ public class FlappyBirds extends GameScreen {
 					CurrentScreen = GAMEOVER_SCREEN;
 					bird.fallSound.play();
 					bird.loseSound.play();
-					bird.themeSound.stop();
+					// Stop the theme sound when the bird dies
+					bird.stopThemeCurent(themeType);
+					//bird.themeSound.stop();
 				}
 			}
 
@@ -232,9 +235,9 @@ public class FlappyBirds extends GameScreen {
 
 	@Override
 	public void GAME_PAINT(Graphics2D g2) {
-		
-		Background.Paint(g2,background);// vẽ bg
-		
+
+		Background.Paint(g2, backgroundType);// vẽ bg
+
 		chimneyGroup.paint(g2);
 
 		ground.Paint(g2);
@@ -333,20 +336,32 @@ public class FlappyBirds extends GameScreen {
 				} else if (e.getKeyCode() == KeyEvent.VK_S) { // Kiểm tra nếu phím "S" được nhấn
 					currentMode = Mode.SUPER; // Cập nhật độ khó thành "super"
 				} else if (e.getKeyCode() == KeyEvent.VK_1) { // doi nen 1
-					background = 0;
+					backgroundType = 0;
 				} else if (e.getKeyCode() == KeyEvent.VK_2) { // doi nen 2
-					background = 1;//
+					backgroundType = 1;//
 				} else if (e.getKeyCode() == KeyEvent.VK_3) { // doi nen 3
-					background = 2; //
+					backgroundType = 2; //
+				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1
+					bird.stopThemeCurent(themeType);
+					themeType=1;
+					bird.themeSound.playLoop();
+				} else if (e.getKeyCode() == KeyEvent.VK_F2) { // doi nhac nen 2
+					bird.stopThemeCurent(themeType);
+					themeType=2;
+					bird.themeSound2.playLoop();
+				} else if (e.getKeyCode() == KeyEvent.VK_F3) { // doi nhac nen 3
+					bird.stopThemeCurent(themeType);
+					themeType=3;
+					bird.themeSound3.playLoop();
 				}
-
-			} else if (CurrentScreen == GAMEPLAY_SCREEN) {
-				if (bird.getLive() && e.getKeyCode() == KeyEvent.VK_SPACE)
-					bird.fly();
-			} else if (CurrentScreen == GAMEOVER_SCREEN) {
-				if (e.getKeyCode() == KeyEvent.VK_SPACE)
-					CurrentScreen = BEGIN_SCREEN;
 			}
+
+		} else if (CurrentScreen == GAMEPLAY_SCREEN) {
+			if (bird.getLive() && e.getKeyCode() == KeyEvent.VK_SPACE)
+				bird.fly();
+		} else if (CurrentScreen == GAMEOVER_SCREEN) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE)
+				CurrentScreen = BEGIN_SCREEN;
 		}
 	}
 }

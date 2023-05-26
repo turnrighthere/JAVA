@@ -16,7 +16,7 @@ public class Chimney extends Objects{
     
     public Chimney(int x, int y, int w, int h){
         super(x, y, w, h);
-        rect = new Rectangle(x, y, w-10, h-6);
+        rect = new Rectangle(x, y, w-15, h-10);
     }
     public void update(){
         setPosX(getPosX()-2);
