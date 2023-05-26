@@ -60,9 +60,4 @@ class Background {
 			g2.drawImage(backgroundImage2, x2, y2, null);
 		}
 	}
-
-	public int getYGround() {
-		return y1;
-	}
-
 }
