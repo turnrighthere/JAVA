@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package flappybirds;
 
 import java.awt.Color;
@@ -175,7 +170,7 @@ public class FlappyBirds extends GameScreen {
 				if (bird.getPosX() > chimneyGroup.getChimney(i).getPosX()
 						&& !chimneyGroup.getChimney(i).getIsBehindBird() && i % 2 == 0) {
 					Point++;
-					bird.getPointSound.play();
+					bird.getPointSound.setVolume(0.5f);
 					chimneyGroup.getChimney(i).setIsBehindBird(true);
 
 					// Speed up the game when the player earns certain points
@@ -195,11 +190,11 @@ public class FlappyBirds extends GameScreen {
 				if (bird.getPosY() < 0 && bird.getPosX() > chimneyGroup.getChimney(i).getPosX()
 						&& !chimneyGroup.getChimney(i).getIsBehindBird()) {
 					CurrentScreen = GAMEOVER_SCREEN;
-					bird.fallSound.play();
+					bird.fallSound.setVolume(0.5f);
 					bird.loseSound.play();
 					// Stop the theme sound when the bird dies
 					bird.stopThemeCurent(themeType);
-					//bird.themeSound.stop();
+					// bird.themeSound.stop();
 				}
 			}
 
@@ -342,17 +337,23 @@ public class FlappyBirds extends GameScreen {
 				} else if (e.getKeyCode() == KeyEvent.VK_3) { // doi nen 3
 					backgroundType = 2; //
 				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1
-					bird.stopThemeCurent(themeType);
-					themeType=1;
-					bird.themeSound.playLoop();
+					if (themeType != 1) {
+						bird.stopThemeCurent(themeType);
+						themeType = 1;
+						bird.themeSound.playLoop();
+					}
 				} else if (e.getKeyCode() == KeyEvent.VK_F2) { // doi nhac nen 2
-					bird.stopThemeCurent(themeType);
-					themeType=2;
-					bird.themeSound2.playLoop();
+					if (themeType != 2) {
+						bird.stopThemeCurent(themeType);
+						themeType = 2;
+						bird.themeSound2.playLoop();
+					}
 				} else if (e.getKeyCode() == KeyEvent.VK_F3) { // doi nhac nen 3
-					bird.stopThemeCurent(themeType);
-					themeType=3;
-					bird.themeSound3.playLoop();
+					if (themeType != 3) {
+						bird.stopThemeCurent(themeType);
+						themeType = 3;
+						bird.themeSound3.playLoop();
+					}
 				}
 			}
 

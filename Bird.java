@@ -29,6 +29,8 @@ public class Bird extends Objects {
 	SoundPlayer getPointSound;
 	SoundPlayer fallSound;
 	SoundPlayer loseSound;
+	
+	
 
 	public Bird(int x, int y, int w, int h) {
 		super(x, y, w, h);
@@ -95,7 +97,7 @@ public class Bird extends Objects {
 
 	public void fly() {
 		vt = -5;
-		fapSound.play();
+		fapSound.setVolume(0.5f);
 	}
 
 	public boolean getIsFlying() {
