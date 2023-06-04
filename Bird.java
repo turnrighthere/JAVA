@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package flappybirds;
 
-//import com.sun.javafx.geom.RectBounds;
 import java.awt.Rectangle;
 import java.io.File;
 import pkg2dgamesframework.Objects;
@@ -38,35 +32,36 @@ public class Bird extends Objects {
 		fallSound = new SoundPlayer(new File("Assets/fall.wav"));
 		themeSound = new SoundPlayer(new File("Assets/theme.wav"));
 		themeSound2 = new SoundPlayer(new File("Assets/theme5.wav"));
-		themeSound3 = new SoundPlayer(new File("Assets/theme3.wav"));
+		themeSound3 = new SoundPlayer(new File("Assets/theme6.wav"));
 		themeSound4 = new SoundPlayer(new File("Assets/theme4.wav"));
 
 		loseSound = new SoundPlayer(new File("Assets/lose.wav"));
 	}
 
-	public void setLive(boolean b,int themeType) {
+	public void setLive(boolean b, int themeType) {
 
 		isLive = b;
 		if (!isLive) {
 			loseSound.play();
-			if(themeType==1)
+			if (themeType == 1)
 				themeSound.stop();
-			else if(themeType==2)
+			else if (themeType == 2)
 				themeSound2.stop();
-			else if(themeType==3)
+			else if (themeType == 3)
 				themeSound3.stop();
 		} else {
 			// Play the theme sound when the bird is created
-			if(themeType==1)
+			if (themeType == 1)
 				themeSound.playLoop();
-			else if(themeType==2)
+			else if (themeType == 2)
 				themeSound2.playLoop();
-			else if(themeType==3)
+			else if (themeType == 3)
 				themeSound3.playLoop();
-			
+
 		}
 
 	}
+
 
 	public boolean getLive() {
 		return isLive;
@@ -95,18 +90,19 @@ public class Bird extends Objects {
 
 	public void fly() {
 		vt = -5;
-		fapSound.play();
+		fapSound.setVolume(0.5f);
 	}
 
 	public boolean getIsFlying() {
 		return isFlying;
 	}
+
 	public void stopThemeCurent(int themeType) {
-		if(themeType==1)
+		if (themeType == 1)
 			themeSound.stop();
-		else if(themeType==2)
+		else if (themeType == 2)
 			themeSound2.stop();
-		else if(themeType==3)
+		else if (themeType == 3)
 			themeSound3.stop();
 	}
 }

@@ -43,7 +43,7 @@ public class ChimneyGroup {
 
 			chimneyImager = ImageIO.read(new File("Assets/chimneyr.png"));
 			chimneyImager2 = ImageIO.read(new File("Assets/chimneyr2.png"));
-			
+
 			chimneyImageg = ImageIO.read(new File("Assets/chimneyg.png"));
 			chimneyImageg2 = ImageIO.read(new File("Assets/chimneyg2.png"));
 		} catch (IOException ex) {
@@ -130,6 +130,13 @@ public class ChimneyGroup {
 					g2.drawImage(chimneyImager, (int) chimneys.get(i).getPosX(), (int) chimneys.get(i).getPosY(), null);
 				else
 					g2.drawImage(chimneyImager2, (int) chimneys.get(i).getPosX(), (int) chimneys.get(i).getPosY(), null);
+			}
+		} else if (chimneyType == 3) {
+			for (int i = 0; i < 6; i++) {
+				if (i % 2 == 0)
+					g2.drawImage(chimneyImageg, (int) chimneys.get(i).getPosX(), (int) chimneys.get(i).getPosY(), null);
+				else
+					g2.drawImage(chimneyImageg2, (int) chimneys.get(i).getPosX(), (int) chimneys.get(i).getPosY(), null);
 			}
 		}
 	}

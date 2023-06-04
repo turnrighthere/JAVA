@@ -25,7 +25,7 @@ import pkg2dgamesframework.GameScreen;
 import pkg2dgamesframework.SoundPlayer;
 
 public class FlappyBirds extends GameScreen {
-	private BufferedImage birds;
+	private BufferedImage birds,birds2,birds3,birds4;
 	private Animation bird_anim;
 	private BufferedImage obj;
 	private float speed;
@@ -53,10 +53,11 @@ public class FlappyBirds extends GameScreen {
 
 	private int backgroundType = 0;
 	private int themeType = 1;
-	private int chimneyType=0;
+	private int chimneyType = 0;
+	private int birdType = 0;
 
 	private Mode currentMode = Mode.NORMAL;
-	
+
 	private JComboBox<String> bgComboBox;
 
 	private void resetGame() {
@@ -89,6 +90,9 @@ public class FlappyBirds extends GameScreen {
 
 		try {
 			birds = ImageIO.read(new File("Assets/bird_sprite.png"));
+			birds2	= ImageIO.read(new File("Assets/bird_sprite2.png"));
+			birds3	= ImageIO.read(new File("Assets/bird_sprite3.png"));
+			birds4	= ImageIO.read(new File("Assets/bird_sprite4.png"));
 
 		} catch (IOException ex) {
 		}
@@ -183,7 +187,7 @@ public class FlappyBirds extends GameScreen {
 					chimneyGroup.getChimney(i).setIsBehindBird(true);
 
 					// Speed up the game when the player earns certain points
-					
+
 					if (Point % 5 == 0) {
 						speed += 0.125;
 						g += 0.01;
@@ -240,15 +244,31 @@ public class FlappyBirds extends GameScreen {
 
 		Background.Paint(g2, backgroundType);// vẽ bg
 
-		chimneyGroup.Paint(g2,chimneyType);
+		chimneyGroup.Paint(g2, chimneyType);
 
 		ground.Paint(g2);
 
-		if (bird.getIsFlying())
-			bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds, g2, 0, -1);
-		else
-			bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds, g2, 0, 0.4f);
+		if (bird.getIsFlying()) {
+			if (birdType == 0)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds, g2, 0, -1);
+			else if(birdType==1)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds2, g2, 0, -1);
+			else if(birdType==2)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds3, g2, 0, -1);
+			else if(birdType==3)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds4, g2, 0, -1);
 
+		} else {
+			if (birdType == 0)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds, g2, 0, 0.4f);
+			else if (birdType == 1)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds2, g2, 0, 0.4f);
+			else if (birdType == 2)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds3, g2, 0, 0.4f);
+			else if (birdType == 3)
+				bird_anim.PaintAnims((int) bird.getPosX(), (int) bird.getPosY(), birds4, g2, 0, 0.4f);
+			
+		}
 		if (CurrentScreen == BEGIN_SCREEN) {
 			g2.setColor(Color.white);
 			Font titleFont = new Font("Arial", Font.BOLD, 60);
@@ -267,7 +287,7 @@ public class FlappyBirds extends GameScreen {
 			int messageX = (800 - messageWidth) / 2; // center the text horizontally
 			int messageY = 350; // set the y-coordinate
 			g2.drawString(message, messageX, messageY);
-			
+
 		}
 
 		if (CurrentScreen == GAMEOVER_SCREEN) {
@@ -289,7 +309,7 @@ public class FlappyBirds extends GameScreen {
 			int messageY = 350; // set the y-coordinate
 			g2.drawString(message, messageX, messageY);
 		}
-		
+
 		// Move the Point to the middle of the top of the screen
 		Font font = new Font("Arial", Font.BOLD, 30);
 		g2.setFont(font);
@@ -326,7 +346,7 @@ public class FlappyBirds extends GameScreen {
 	public void KEY_ACTION(KeyEvent e, int Event) {
 		if (Event == KEY_PRESSED) {
 			if (CurrentScreen == BEGIN_SCREEN) {
-				if (bird.getLive() && (e.getKeyCode() == KeyEvent.VK_SPACE  ))
+				if (bird.getLive() && (e.getKeyCode() == KeyEvent.VK_SPACE))
 					CurrentScreen = GAMEPLAY_SCREEN; // bấm space để bát đầu
 				else if (bird.getLive() && e.getKeyCode() == KeyEvent.VK_0)
 					resetBestScore(); // bấm 0 để reset bestScore
@@ -344,7 +364,7 @@ public class FlappyBirds extends GameScreen {
 					backgroundType = 1;//
 				} else if (e.getKeyCode() == KeyEvent.VK_3) { // doi nen 3
 					backgroundType = 2; //
-				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1					
+				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1
 					bird.stopThemeCurent(themeType);
 					if (themeType != 1) {
 						themeType = 1;
@@ -359,12 +379,19 @@ public class FlappyBirds extends GameScreen {
 					if (themeType != 3) {
 						themeType = 3;
 					}
-				}else if (e.getKeyCode() == KeyEvent.VK_4) { // doi nen 3
+				} else if (e.getKeyCode() == KeyEvent.VK_4) { // doi nen 3
 					chimneyType = 0; //
-				}else if (e.getKeyCode() == KeyEvent.VK_5) { // doi nen 3
+				} else if (e.getKeyCode() == KeyEvent.VK_5) { // doi nen 3
 					chimneyType = 1; //
-				}else if (e.getKeyCode() == KeyEvent.VK_6) { // doi nen 3
+				} else if (e.getKeyCode() == KeyEvent.VK_6) { // doi nen 3
 					chimneyType = 2; //
+				} else if (e.getKeyCode() == KeyEvent.VK_7) { // doi nen 3
+					chimneyType = 3; //
+				} else if (e.getKeyCode() == KeyEvent.VK_B) { // doi nen 3
+					if (birdType < 3)
+						birdType++;
+					else
+						birdType -= 3;
 				}
 			}
 
