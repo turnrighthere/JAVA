@@ -1,14 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package flappybirds;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +15,9 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 import pkg2dgamesframework.AFrameOnImage;
 import pkg2dgamesframework.Animation;
@@ -52,8 +53,11 @@ public class FlappyBirds extends GameScreen {
 
 	private int backgroundType = 0;
 	private int themeType = 1;
+	private int chimneyType=0;
 
 	private Mode currentMode = Mode.NORMAL;
+	
+	private JComboBox<String> bgComboBox;
 
 	private void resetGame() {
 		g = 0.2f;
@@ -175,15 +179,11 @@ public class FlappyBirds extends GameScreen {
 				if (bird.getPosX() > chimneyGroup.getChimney(i).getPosX()
 						&& !chimneyGroup.getChimney(i).getIsBehindBird() && i % 2 == 0) {
 					Point++;
-					bird.getPointSound.play();
+					bird.getPointSound.setVolume(0.5f);
 					chimneyGroup.getChimney(i).setIsBehindBird(true);
 
 					// Speed up the game when the player earns certain points
-					/*
-					 * if (currentMode == Mode.SUPER) { if (Point == 5 || Point == 10 || Point == 20
-					 * || Point == 40 || Point == 80 || Point == 160 || Point == 320) { speed +=
-					 * 0.125; g += 0.025; } }
-					 */
+					
 					if (Point % 5 == 0) {
 						speed += 0.125;
 						g += 0.01;
@@ -195,17 +195,19 @@ public class FlappyBirds extends GameScreen {
 				if (bird.getPosY() < 0 && bird.getPosX() > chimneyGroup.getChimney(i).getPosX()
 						&& !chimneyGroup.getChimney(i).getIsBehindBird()) {
 					CurrentScreen = GAMEOVER_SCREEN;
-					bird.fallSound.play();
+					bird.fallSound.setVolume(0.5f);
 					bird.loseSound.play();
 					// Stop the theme sound when the bird dies
 					bird.stopThemeCurent(themeType);
-					//bird.themeSound.stop();
 				}
 			}
 
 			if (bird.getPosY() + bird.getH() > ground.getYGround()) {
 				CurrentScreen = GAMEOVER_SCREEN;
-
+				bird.fallSound.setVolume(0.5f);
+				bird.loseSound.play();
+				// Stop the theme sound when the bird dies
+				bird.stopThemeCurent(themeType);
 			}
 
 			updateBestScore();
@@ -238,7 +240,7 @@ public class FlappyBirds extends GameScreen {
 
 		Background.Paint(g2, backgroundType);// vẽ bg
 
-		chimneyGroup.paint(g2);
+		chimneyGroup.Paint(g2,chimneyType);
 
 		ground.Paint(g2);
 
@@ -265,6 +267,7 @@ public class FlappyBirds extends GameScreen {
 			int messageX = (800 - messageWidth) / 2; // center the text horizontally
 			int messageY = 350; // set the y-coordinate
 			g2.drawString(message, messageX, messageY);
+			
 		}
 
 		if (CurrentScreen == GAMEOVER_SCREEN) {
@@ -286,7 +289,7 @@ public class FlappyBirds extends GameScreen {
 			int messageY = 350; // set the y-coordinate
 			g2.drawString(message, messageX, messageY);
 		}
-
+		
 		// Move the Point to the middle of the top of the screen
 		Font font = new Font("Arial", Font.BOLD, 30);
 		g2.setFont(font);
@@ -323,10 +326,10 @@ public class FlappyBirds extends GameScreen {
 	public void KEY_ACTION(KeyEvent e, int Event) {
 		if (Event == KEY_PRESSED) {
 			if (CurrentScreen == BEGIN_SCREEN) {
-				if (bird.getLive() && e.getKeyCode() == KeyEvent.VK_SPACE)
+				if (bird.getLive() && (e.getKeyCode() == KeyEvent.VK_SPACE  ))
 					CurrentScreen = GAMEPLAY_SCREEN; // bấm space để bát đầu
 				else if (bird.getLive() && e.getKeyCode() == KeyEvent.VK_0)
-					resetBestScore(); // bấm F7 để reset bestScore
+					resetBestScore(); // bấm 0 để reset bestScore
 
 				if (e.getKeyCode() == KeyEvent.VK_N) { // Kiểm tra nếu phím "N" được nhấn
 					currentMode = Mode.NORMAL; // Cập nhật độ khó thành "normal"
@@ -341,18 +344,27 @@ public class FlappyBirds extends GameScreen {
 					backgroundType = 1;//
 				} else if (e.getKeyCode() == KeyEvent.VK_3) { // doi nen 3
 					backgroundType = 2; //
-				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1
+				} else if (e.getKeyCode() == KeyEvent.VK_F1) { // doi nhac nen 1					
 					bird.stopThemeCurent(themeType);
-					themeType=1;
-					bird.themeSound.playLoop();
+					if (themeType != 1) {
+						themeType = 1;
+					}
 				} else if (e.getKeyCode() == KeyEvent.VK_F2) { // doi nhac nen 2
 					bird.stopThemeCurent(themeType);
-					themeType=2;
-					bird.themeSound2.playLoop();
+					if (themeType != 2) {
+						themeType = 2;
+					}
 				} else if (e.getKeyCode() == KeyEvent.VK_F3) { // doi nhac nen 3
 					bird.stopThemeCurent(themeType);
-					themeType=3;
-					bird.themeSound3.playLoop();
+					if (themeType != 3) {
+						themeType = 3;
+					}
+				}else if (e.getKeyCode() == KeyEvent.VK_4) { // doi nen 3
+					chimneyType = 0; //
+				}else if (e.getKeyCode() == KeyEvent.VK_5) { // doi nen 3
+					chimneyType = 1; //
+				}else if (e.getKeyCode() == KeyEvent.VK_6) { // doi nen 3
+					chimneyType = 2; //
 				}
 			}
 
