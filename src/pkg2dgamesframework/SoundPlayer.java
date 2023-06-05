@@ -1,9 +1,4 @@
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pkg2dgamesframework;
 
 import java.io.File;
@@ -11,14 +6,13 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
-/**
- *
- * @author phamn
- */
+
 public class SoundPlayer {
     private boolean isPlaying;
     private Clip clip;
+    private float volume = 1.0f;
     
     public SoundPlayer(File path){
         try{
@@ -47,7 +41,7 @@ public class SoundPlayer {
         }
     }
     public void stop(){
-        if(clip.isRunning()) clip.stop();
+        clip.stop();
     }
     
     public void close(){
@@ -74,4 +68,17 @@ public class SoundPlayer {
         
         return isPlaying;
     }
+    public void setVolume(float volume) {
+        if (clip != null) {
+            this.volume = volume;
+            float gain = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            clip.setFramePosition(0);
+            clip.start();
+            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl.setValue(gain);
+            }
+        }
+    }
+
 }
